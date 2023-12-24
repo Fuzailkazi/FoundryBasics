@@ -7,18 +7,31 @@ import {Counter} from "../src/Counter.sol";
 contract CounterTest is Test {
     Counter public counter;
 
-    function setUp() public {
+    function setUp() public{
         counter = new Counter();
-        counter.setNumber(0);
     }
 
-    function test_Increment() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
+    function testInc() public{
+        counter.inc();
+        assertEq(counter.count(), 1);
     }
 
-    function testFuzz_SetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+    function testFailDec() public {
+        counter.dec();
+
     }
+
+    function testDecUnderflow() public{
+        vm.expectRevert(); //  because here we expect an underflow 
+        counter.dec();
+    }
+    
+    function testDec() public {
+        counter.inc();
+        counter.inc();
+        counter.dec();
+         assertEq(counter.count(), 1);
+
+    }
+
 }
